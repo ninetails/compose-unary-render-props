@@ -10,20 +10,16 @@ const BASE_PATH = process.cwd()
 const PACKAGE_FILE = 'package.json'
 const TARGET_PATH = 'dist'
 
-function updateJson (input) {
-  const { dependencies, devDependencies, private: priv, scripts, husky, ...rest } = input
-
-  return {
-    ...rest,
-    peerDependencies: dependencies
-  }
-}
-
 readFileAsync(join(BASE_PATH, PACKAGE_FILE), { encoding: 'utf8' })
   .then(function parse (str) {
     return JSON.parse(str)
   })
-  .then(updateJson)
+  .then(function updateJson ({ dependencies, devDependencies, private: priv, scripts, husky, ...rest }) {
+    return {
+      ...rest,
+      peerDependencies: dependencies
+    }
+  })
   .then(function stringify (obj) {
     return JSON.stringify(obj, null, 2)
   })
